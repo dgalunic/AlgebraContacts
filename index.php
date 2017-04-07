@@ -2,6 +2,8 @@
 	require_once 'core/init.php';
 	
 	Helper::getHeader('Algebra Contacts');
+		
+	
 ?>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
