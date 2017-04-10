@@ -45,6 +45,7 @@ class Validation
 							if ($check->count()){
 								$this->addError($item, "{$item} already exists.");
 							}
+						break;
 						case 'uppercase':
 							if (!preg_match("/[A-Z]/", $value)){
 								$this->addError($item, "Add at least one Uppercase letter.");
