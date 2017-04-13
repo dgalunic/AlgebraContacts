@@ -2,14 +2,15 @@
 	require_once 'core/init.php';
 		
 	$validation = new Validation();
-		
+				
 	if(Input::exists()) {
-		$validate = $validation->check(array(
-			'name'           => array(
-				'required' => true,
-				'min'      => 2,
-				'max'      => 50
-			),
+		if (Token::getInstance()->check(Input::get('token'))) {
+			$validate = $validation->check(array(
+				'name'           => array(
+					'required' => true,
+					'min'      => 2,
+					'max'      => 50
+				),
 			'username'       => array(
 				'required' => true,
 				'min'      => 2,
@@ -29,9 +30,13 @@
 		));
 		
 		if ($validate->passed()) {
-			Session::flash('success', 'You registered successfully!!! ');	
-			header('location: login.php');
-			exit();
+			
+			$salt = Hash::salt(32);
+			$password = Hash::make(Input::get('password'), $salt);
+			
+			Session::flash('success', 'You registered successfully!!! ');
+			Redirect::to('login');
+			}
 		}
 	}
 	
@@ -48,6 +53,7 @@
 			</div>
 			<div class="panel-body">
 				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+					<input type="hidden" name="token" value="<?php echo Token::getInstance()->generate(); ?>"/>
 					<div class="form-group <?php echo ($validation->hasError('name')) ? 'has-error' : ''; ?>">
 						<label for="name" class="control-label">Name*</label>
 						<input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="<?php echo escape(Input::get('name'))?>">

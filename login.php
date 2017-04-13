@@ -5,7 +5,7 @@
 	Helper::getHeader('Algebra Contacts');
 	
 	require_once 'notifications.php';
-	
+		
 ?>
 	
 <?php
