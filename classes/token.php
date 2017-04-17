@@ -2,30 +2,27 @@
 
 class Token
 {
-	private static $_token_name;
-	
-	private function __construct()
-	{
-		self::$_token_name = Config::get('config/session')['sessions']['token_name'];
-	}
-	
-	public static function getInstance()
-	{
-		return new Token();
-	}
-	
-	public function generate()
-	{
-		return Session::put(self::$_token_name, hash('sha256', uniqid()));
-	}
-	
-	public function check($token)
-	{
-		if(Session::exists(self::$_token_name) && $token === Session::get(self::$_token_name)){
-			Session::delete(self::$_token_name);
-			return true;
-		}
-		
-		return false;
-	}
+    private static $_config;
+
+    private function __construct()
+    {
+        self::$_config = Config::get('config/session');
+    }
+
+    public static function generate()
+    {
+        return Session::put(self::$_config['sessions']['token_name'], md5(uniqid()));
+    }
+
+    public static function check($token)
+    {
+        $token_name = self::$_config['sessions']['token_name'];
+
+        if(Session::exists($token_name) && $token === Session::get($token_name)) {
+            Session::delete($token_name);
+            return true;
+        }
+
+        return false;
+    }
 }

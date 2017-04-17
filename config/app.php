@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'name' => 'Algebra Contacts'
+    'name' => 'Algebra Contacts'
 ];
