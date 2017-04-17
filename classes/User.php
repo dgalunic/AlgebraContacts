@@ -61,6 +61,13 @@ class User
         }
         return false;
     }
+	
+	public function logout()
+	{
+		$this->_db->delete('user_session', array('user_id', '=', $this->data()->id));
+		
+		Session::delete($this->_sessionName);
+	}
 
     public function data()
     {

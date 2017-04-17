@@ -8,5 +8,13 @@
         Redirect::to('index');
 
     }
+
+    Helper::getHeader('Dashboard');
+	
+	require_once 'notifications.php';
 ?>
 <h1> Dashboard</h1>
+
+<?php
+    Helper::getFooter();
+?>
