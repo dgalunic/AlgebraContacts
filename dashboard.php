@@ -9,7 +9,7 @@
 
     }
 
-    Helper::getHeader('Dashboard');
+    Helper::getHeader('Dashboard', 'header', $user);
 	
 	require_once 'notifications.php';
 ?>

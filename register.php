@@ -64,7 +64,7 @@
         }
     }
 
-    Helper::getHeader('User Registration');
+    Helper::getHeader('User Registration', 'header', $user);
 
     require_once 'notifications.php';
 ?>

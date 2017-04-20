@@ -1,6 +1,6 @@
 <?php
     require_once 'core/init.php';
-
+	
     $user = new User();
     
     if($user->check()) {
@@ -21,8 +21,9 @@
             ));
 
             if($validation->passed()) {
-
-                $login = $user->login(Input::get('username'), Input::get('password'));
+				
+				$remember = (bool)Input::get('remember');
+                $login = $user->login(Input::get('username'), Input::get('password'), $remember);
 
                 if($login) {
 
@@ -37,7 +38,7 @@
         }
     }
 
-    Helper::getHeader('Algebra Contacts');
+    Helper::getHeader('Algebra Contacts', 'header', $user);
 
     require_once 'notifications.php';
 ?>
@@ -60,6 +61,11 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter a password">
                         <?php echo ($validate->hasError('password')) ? '<p class="text-danger">'.$validate->hasError('password').'</p>' : '' ?>
                     </div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="remember" value="true"> Remember me
+							</label>
+						</div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Sign In</button>
                     </div>

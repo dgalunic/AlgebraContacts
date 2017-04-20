@@ -6,18 +6,22 @@ class User
     private $_config;
     private $_data;
     private $_sessionName;
-    private $_isLoggedIn;
+	private $_cookieName;
+	private $_cookieExpire;
+    private $_isLoggedIn = false;
 
     public function __construct($user = null)
     {
         $this->_config = Config::get('config/session');
         $this->_sessionName = $this->_config['sessions']['session_name'];
+        $this->_cookieName = $this->_config['remember']['cookie_name'];
+        $this->_cookieExpire = $this->_config['remember']['cookie_expire'];
         $this->_db = DB::getInstance();
 
         if(!$user) {
             if(Session::exists($this->_sessionName)) {
                 $user = Session::get($this->_sessionName);
-
+				
                 if($this->find($user)) {
                     $this->_isLoggedIn = true;
                 } else {
@@ -50,12 +54,28 @@ class User
         return false;
     }
 
-    public function login($username = null, $password = null)
+    public function login($username = null, $password = null, $remember)
     {
         $user = $this->find($username);
         if($user) {
             if($this->data()->password === Hash::make($password, $this->data()->salt)) {
                 Session::put($this->_sessionName, $this->data()->id);
+				if($remember) {
+					$hash  = Hash::unique();
+					$hashCheck = $this->_db->get('hash', 'sessions', array('user_id', '=', $this->data()->id));
+					
+					if(!$hashCheck->count()) {
+						$this->_db->insert('sessions', array(
+							'user_id' => $this->data()->id,
+							'hash'    => $hash
+						));
+					} else {
+						$hash = $hashCheck->first()->hash;
+					}
+					
+					Cookie::put($this->_cookieName, $hash, $this->_cookieExpire);
+				}
+				
                 return true;
             }
         }
@@ -67,6 +87,8 @@ class User
 		$this->_db->delete('user_session', array('user_id', '=', $this->data()->id));
 		
 		Session::delete($this->_sessionName);
+		
+		session_destroy;
 	}
 
     public function data()

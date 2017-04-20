@@ -9,7 +9,7 @@ class Helper
     }
     private function __clone(){}
 
-    public static function getHeader($title, $path = 'header')
+    public static function getHeader($title, $path, $user = null)
     {
         if($path) {
             $file = require_once 'includes/layout/'.$path.'.php';

@@ -2,6 +2,11 @@
 	require_once 'core/init.php';
 	
 	$user = new User();
-	$user->logout();
+	
+	if($user->check()) {
+		
+		$user->logout();
+
+    }
 	
 	Redirect::to('index');
