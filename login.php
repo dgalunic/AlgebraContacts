@@ -8,21 +8,21 @@
         Redirect::to('dashboard');
 
     }
-
-    $validate = new Validation();
+	
+	$validate = new Validation();
 
     if(Input::exists()) {
 
         if(Token::check(Input::get('token'))) {
-
-            $validation = $validate->check(array(
+			
+			    $validation = $validate->check(array(
                 'username' => array('required' => true),
                 'password' => array('required' => true)
             ));
 
             if($validation->passed()) {
 				
-				$remember = (bool)Input::get('remember');
+				$remember = (bool)(Input::get('remember'));
                 $login = $user->login(Input::get('username'), Input::get('password'), $remember);
 
                 if($login) {
